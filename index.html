@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<!-- trigger rebuild -->
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -87,8 +86,7 @@
     .dots {
       position: absolute;
       bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
+      left: 30px; /* Такой же отступ как у левой стрелочки */
       display: flex;
       gap: 8px;
       z-index: 10;
@@ -113,7 +111,7 @@
       top: 30px;
       left: 30px;
       display: flex;
-      align-items: center;
+      align-items: center; /* Выравнивание по центру по вертикали */
       gap: 40px;
       z-index: 10;
     }
@@ -122,6 +120,7 @@
       font-size: 16px;
       font-weight: 400;
       letter-spacing: -0.01em;
+      line-height: 1.2; /* Фиксированная высота строки */
     }
     .menu-buttons {
       display: flex;
@@ -139,7 +138,8 @@
       text-decoration: none;
       display: inline-block;
       position: relative;
-      padding-bottom: 5px;
+      line-height: 1.2; /* Такая же высота строки как у имени */
+      padding-bottom: 3px; /* Фиксированное место для подчеркивания */
     }
     .menu-btn::after {
       content: '';
@@ -172,6 +172,10 @@
         top: 20px;
         left: 20px;
         gap: 25px;
+      }
+      .dots {
+        left: 15px;
+        bottom: 20px;
       }
       .author-name {
         font-size: 14px;
@@ -414,7 +418,7 @@
     }, { passive: true });
     
     document.addEventListener('touchend', (e) => {
-      const touchEndX = e.changedTouches[0].screenX;
+      const touchEndX = e.changedTouches.screenX;
       const diff = touchStartX - touchEndX;
       if (Math.abs(diff) > 50) {
         if (diff > 0) nextSlide();
