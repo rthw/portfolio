@@ -29,13 +29,18 @@
       height: 100vh;
       position: relative;
       overflow: hidden;
+      padding-top: 80px;    /* Место для меню сверху */
+      padding-bottom: 80px; /* Место для точек снизу */
+      padding-left: 80px;   /* Место для левой стрелки */
+      padding-right: 80px;  /* Место для правой стрелки */
+      box-sizing: border-box;
     }
     .slide {
       position: absolute;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      top: 80px;
+      left: 80px;
+      width: calc(100vw - 160px);
+      height: calc(100vh - 160px);
       display: none;
       align-items: center;
       justify-content: center;
@@ -53,8 +58,8 @@
       opacity: 0;
     }
     .slide img {
-      max-width: 100vw;
-      max-height: 100vh;
+      max-width: 100%;
+      max-height: 100%;
       object-fit: contain;
       display: block;
     }
@@ -86,7 +91,7 @@
     .dots {
       position: absolute;
       bottom: 30px;
-      left: 30px; /* Такой же отступ как у левой стрелочки */
+      left: 30px;
       display: flex;
       gap: 8px;
       z-index: 10;
@@ -111,7 +116,7 @@
       top: 30px;
       left: 30px;
       display: flex;
-      align-items: center; /* Выравнивание по центру по вертикали */
+      align-items: center;
       gap: 40px;
       z-index: 10;
     }
@@ -120,7 +125,7 @@
       font-size: 16px;
       font-weight: 400;
       letter-spacing: -0.01em;
-      line-height: 1.2; /* Фиксированная высота строки */
+      line-height: 1.2;
     }
     .menu-buttons {
       display: flex;
@@ -138,8 +143,8 @@
       text-decoration: none;
       display: inline-block;
       position: relative;
-      line-height: 1.2; /* Такая же высота строки как у имени */
-      padding-bottom: 3px; /* Фиксированное место для подчеркивания */
+      line-height: 1.2;
+      padding-bottom: 3px;
     }
     .menu-btn::after {
       content: '';
@@ -160,7 +165,19 @@
     .menu-btn.active::after {
       background: white;
     }
-    @media (max-width: 768px) {
+    @media (max-width: 768px), (max-height: 700px) {
+      .slides-container {
+        padding-top: 60px;
+        padding-bottom: 60px;
+        padding-left: 60px;
+        padding-right: 60px;
+      }
+      .slide {
+        top: 60px;
+        left: 60px;
+        width: calc(100vw - 120px);
+        height: calc(100vh - 120px);
+      }
       .nav-arrow {
         font-size: 24px;
         width: 35px;
@@ -418,7 +435,7 @@
     }, { passive: true });
     
     document.addEventListener('touchend', (e) => {
-      const touchEndX = e.changedTouches.screenX;
+      const touchEndX = e.changedTouches[0].screenX;
       const diff = touchStartX - touchEndX;
       if (Math.abs(diff) > 50) {
         if (diff > 0) nextSlide();
