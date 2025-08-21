@@ -138,7 +138,17 @@
       text-decoration: none;
       display: inline-block;
       position: relative;
-      padding-bottom: 4px;
+      padding-bottom: 5px;
+    }
+    .menu-btn::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: transparent;
+      transition: background-color 0.3s ease;
     }
     .menu-btn:hover {
       color: rgba(255, 255, 255, 1);
@@ -147,12 +157,6 @@
       color: rgba(255, 255, 255, 1);
     }
     .menu-btn.active::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
       background: white;
     }
     @media (max-width: 768px) {
@@ -188,22 +192,64 @@
     </div>
     <div class="slides-container" id="slides">
       <div class="slide" data-category="photo">
-        <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&h=900&fit=crop" alt="Фотография 1">
+        <img src="photo/1.jpg" alt="Фотография 1">
       </div>
       <div class="slide" data-category="photo">
-        <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1600&h=900&fit=crop" alt="Фотография 2">
+        <img src="photo/2.jpg" alt="Фотография 2">
       </div>
       <div class="slide" data-category="photo">
-        <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?w=1600&h=900&fit=crop" alt="Фотография 3">
+        <img src="photo/3.jpg" alt="Фотография 3">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/4.jpg" alt="Фотография 4">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/5.jpg" alt="Фотография 5">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/6.jpg" alt="Фотография 6">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/7.jpg" alt="Фотография 7">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/8.jpg" alt="Фотография 8">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/9.jpg" alt="Фотография 9">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/10.jpg" alt="Фотография 10">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/11.jpg" alt="Фотография 11">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/12.jpg" alt="Фотография 12">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/13.jpg" alt="Фотография 13">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/14.jpg" alt="Фотография 14">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/15.jpg" alt="Фотография 15">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/16.jpg" alt="Фотография 16">
+      </div>
+      <div class="slide" data-category="photo">
+        <img src="photo/17.jpg" alt="Фотография 17">
       </div>
       <div class="slide" data-category="graphic">
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1600&h=900&fit=crop" alt="Графика 1">
+        <img src="graphic/1.jpg" alt="Графика 1">
       </div>
       <div class="slide" data-category="graphic">
-        <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=1600&h=900&fit=crop" alt="Графика 2">
+        <img src="graphic/2.jpg" alt="Графика 2">
       </div>
       <div class="slide" data-category="graphic">
-        <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=1600&h=900&fit=crop" alt="Графика 3">
+        <img src="graphic/3.jpg" alt="Графика 3">
       </div>
     </div>
     <button class="nav-arrow arrow-left" aria-label="Предыдущая"></button>
