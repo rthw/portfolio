@@ -41,7 +41,7 @@
       left: 80px;
       width: calc(100vw - 160px);
       height: calc(100vh - 160px);
-      display: none;
+      display: flex;
       align-items: center;
       justify-content: center;
       background: #000;
@@ -50,12 +50,12 @@
       z-index: 1;
     }
     .slide.active {
-      display: flex;
       opacity: 1;
       z-index: 2;
     }
     .slide.fade-out {
       opacity: 0;
+      z-index: 1;
     }
     .slide img {
       max-width: 100%;
@@ -254,7 +254,7 @@
     for(let i = 1; i <= 17; i++) {
       const num = i.toString().padStart(2, '0');
       photos.push(`photos/${num}.jpg`);
-      graphics.push(`graphic/${num}.jpg`);  // Исправлено: graphic без "s"
+      graphics.push(`graphic/${num}.jpg`);
     }
 
     const dotsContainer = document.getElementById('dots');
@@ -294,6 +294,12 @@
         slide.innerHTML = `<img src="${src}" alt="${currentCategory === 'photo' ? 'Photography' : 'Graphic Design'} ${index + 1}">`;
         slidesContainer.appendChild(slide);
       });
+      
+      // Показываем первый слайд
+      const firstSlide = slidesContainer.children[0];
+      if (firstSlide) {
+        firstSlide.classList.add('active');
+      }
     }
 
     function updateMenuButtons() {
@@ -315,16 +321,6 @@
       });
     }
 
-    function updateActiveSlide() {
-      const slides = document.querySelectorAll('.slide');
-      slides.forEach((slide, index) => {
-        slide.classList.remove('active', 'fade-out');
-        if (index === currentSlide) {
-          slide.classList.add('active');
-        }
-      });
-    }
-
     function switchCategory(newCategory, slideIndex = 0) {
       if (isTransitioning) return;
       isTransitioning = true;
@@ -338,7 +334,6 @@
         currentCategory = newCategory;
         currentSlide = slideIndex;
         generateSlides();
-        updateActiveSlide();
         updateDots();
         updateMenuButtons();
         updateURL(currentCategory);
@@ -353,38 +348,50 @@
       
       // Бесшовная навигация между категориями
       if (index >= images.length) {
-        // Переходим к следующей категории (с первого слайда)
         const newCategory = currentCategory === 'photo' ? 'graphic' : 'photo';
         switchCategory(newCategory, 0);
         return;
       }
       
       if (index < 0) {
-        // Переходим к предыдущей категории (с последнего слайда)
         const newCategory = currentCategory === 'photo' ? 'graphic' : 'photo';
         const newImages = newCategory === 'photo' ? photos : graphics;
         switchCategory(newCategory, newImages.length - 1);
         return;
       }
 
-      // Обычный переход внутри категории
+      // Crossfade переход внутри категории
       if (index === currentSlide) return;
       
       isTransitioning = true;
       const slides = document.querySelectorAll('.slide');
+      const oldSlide = slides[currentSlide];
+      const newSlide = slides[index];
       
-      if (slides[currentSlide]) {
-        slides[currentSlide].classList.remove('active');
-        slides[currentSlide].classList.add('fade-out');
-      }
-      
-      setTimeout(() => {
-        slides.forEach(slide => slide.classList.remove('fade-out'));
-        currentSlide = index;
-        updateActiveSlide();
-        updateDots();
+      if (oldSlide && newSlide) {
+        // Показываем новый слайд под старым
+        newSlide.style.zIndex = '2';
+        newSlide.classList.add('active');
+        
+        // Плавно скрываем старый слайд
+        oldSlide.classList.add('fade-out');
+        
+        setTimeout(() => {
+          // Убираем классы у старого слайда
+          oldSlide.classList.remove('active', 'fade-out');
+          oldSlide.style.zIndex = '1';
+          
+          // Поднимаем новый слайд наверх
+          newSlide.style.zIndex = '2';
+          newSlide.classList.remove('fade-out');
+          
+          currentSlide = index;
+          updateDots();
+          isTransitioning = false;
+        }, 600);
+      } else {
         isTransitioning = false;
-      }, 300);
+      }
     }
     
     function nextSlide() {
@@ -452,7 +459,6 @@
     // Инициализация
     currentCategory = getCategoryFromURL();
     generateSlides();
-    updateActiveSlide();
     updateDots();
     updateMenuButtons();
   </script>
