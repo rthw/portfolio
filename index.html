@@ -252,9 +252,9 @@
     const graphics = [];
     
     for(let i = 1; i <= 17; i++) {
-      const photoNum = i.toString().padStart(2, '0');
-      photos.push(`photos/${photoNum}.jpg`);
-      graphics.push(`graphics/${photoNum}.jpg`);
+      const num = i.toString().padStart(2, '0');
+      photos.push(`photos/${num}.jpg`);
+      graphics.push(`graphic/${num}.jpg`);  // Исправлено: graphic без "s"
     }
 
     const dotsContainer = document.getElementById('dots');
@@ -291,7 +291,7 @@
         const slide = document.createElement('div');
         slide.className = 'slide';
         slide.setAttribute('data-category', currentCategory);
-        slide.innerHTML = `<img src="${src}" alt="${currentCategory} ${index + 1}">`;
+        slide.innerHTML = `<img src="${src}" alt="${currentCategory === 'photo' ? 'Photography' : 'Graphic Design'} ${index + 1}">`;
         slidesContainer.appendChild(slide);
       });
     }
@@ -318,14 +318,14 @@
     function updateActiveSlide() {
       const slides = document.querySelectorAll('.slide');
       slides.forEach((slide, index) => {
-        slide.classList.remove('active');
+        slide.classList.remove('active', 'fade-out');
         if (index === currentSlide) {
           slide.classList.add('active');
         }
       });
     }
 
-    function switchCategory(newCategory) {
+    function switchCategory(newCategory, slideIndex = 0) {
       if (isTransitioning) return;
       isTransitioning = true;
 
@@ -336,7 +336,7 @@
 
       setTimeout(() => {
         currentCategory = newCategory;
-        currentSlide = 0;
+        currentSlide = slideIndex;
         generateSlides();
         updateActiveSlide();
         updateDots();
@@ -353,23 +353,17 @@
       
       // Бесшовная навигация между категориями
       if (index >= images.length) {
-        // Переходим к следующей категории
+        // Переходим к следующей категории (с первого слайда)
         const newCategory = currentCategory === 'photo' ? 'graphic' : 'photo';
-        switchCategory(newCategory);
+        switchCategory(newCategory, 0);
         return;
       }
       
       if (index < 0) {
-        // Переходим к предыдущей категории
+        // Переходим к предыдущей категории (с последнего слайда)
         const newCategory = currentCategory === 'photo' ? 'graphic' : 'photo';
         const newImages = newCategory === 'photo' ? photos : graphics;
-        currentCategory = newCategory;
-        currentSlide = newImages.length - 1;
-        generateSlides();
-        updateActiveSlide();
-        updateDots();
-        updateMenuButtons();
-        updateURL(currentCategory);
+        switchCategory(newCategory, newImages.length - 1);
         return;
       }
 
@@ -381,16 +375,16 @@
       
       if (slides[currentSlide]) {
         slides[currentSlide].classList.remove('active');
+        slides[currentSlide].classList.add('fade-out');
       }
       
-      currentSlide = index;
-      
-      if (slides[currentSlide]) {
-        slides[currentSlide].classList.add('active');
-      }
-      
-      updateDots();
-      setTimeout(() => { isTransitioning = false; }, 600);
+      setTimeout(() => {
+        slides.forEach(slide => slide.classList.remove('fade-out'));
+        currentSlide = index;
+        updateActiveSlide();
+        updateDots();
+        isTransitioning = false;
+      }, 300);
     }
     
     function nextSlide() {
