@@ -29,10 +29,10 @@
       height: 100vh;
       position: relative;
       overflow: hidden;
-      padding-top: 80px;    /* Место для меню сверху */
-      padding-bottom: 80px; /* Место для точек снизу */
-      padding-left: 80px;   /* Место для левой стрелки */
-      padding-right: 80px;  /* Место для правой стрелки */
+      padding-top: 80px;
+      padding-bottom: 80px;
+      padding-left: 80px;
+      padding-right: 80px;
       box-sizing: border-box;
     }
     .slide {
@@ -165,40 +165,66 @@
     .menu-btn.active::after {
       background: white;
     }
-    @media (max-width: 768px), (max-height: 700px) {
+
+    /* Улучшенная мобильная адаптация */
+    @media (max-width: 768px) {
       .slides-container {
-        padding-top: 60px;
-        padding-bottom: 60px;
-        padding-left: 60px;
-        padding-right: 60px;
+        padding-top: 50px;
+        padding-bottom: 50px;
+        padding-left: 50px;
+        padding-right: 50px;
       }
       .slide {
-        top: 60px;
-        left: 60px;
-        width: calc(100vw - 120px);
-        height: calc(100vh - 120px);
+        top: 50px;
+        left: 50px;
+        width: calc(100vw - 100px);
+        height: calc(100vh - 100px);
       }
       .nav-arrow {
-        font-size: 24px;
-        width: 35px;
-        height: 70px;
+        font-size: 22px;
+        width: 30px;
+        height: 60px;
       }
-      .arrow-left { left: 15px; }
-      .arrow-right { right: 15px; }
+      .arrow-left { left: 10px; }
+      .arrow-right { right: 10px; }
       .top-menu {
-        top: 20px;
-        left: 20px;
-        gap: 25px;
+        top: 15px;
+        left: 15px;
+        gap: 20px;
+      }
+      .dots {
+        left: 10px;
+        bottom: 15px;
+      }
+      .author-name {
+        font-size: 13px;
+      }
+      .menu-btn {
+        font-size: 13px;
+      }
+    }
+
+    @media (max-height: 600px) {
+      .slides-container {
+        padding-top: 40px;
+        padding-bottom: 40px;
+        padding-left: 40px;
+        padding-right: 40px;
+      }
+      .slide {
+        top: 40px;
+        left: 40px;
+        width: calc(100vw - 80px);
+        height: calc(100vh - 80px);
+      }
+      .top-menu {
+        top: 10px;
+        left: 15px;
+        gap: 15px;
       }
       .dots {
         left: 15px;
-        bottom: 20px;
-      }
-      .author-name {
-        font-size: 14px;
-      }
-      .menu-btn {
-        font-size: 14px;
+        bottom: 10px;
       }
     }
   </style>
@@ -213,63 +239,7 @@
       </div>
     </div>
     <div class="slides-container" id="slides">
-      <div class="slide" data-category="photo">
-        <img src="photos/1.jpg" alt="Photography 1">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/2.jpg" alt="Photography 2">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/3.jpg" alt="Photography 3">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/4.jpg" alt="Photography 4">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/5.jpg" alt="Photography 5">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/6.jpg" alt="Photography 6">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/7.jpg" alt="Photography 7">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/8.jpg" alt="Photography 8">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/9.jpg" alt="Photography 9">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/10.jpg" alt="Photography 10">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/11.jpg" alt="Photography 11">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/12.jpg" alt="Photography 12">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/13.jpg" alt="Photography 13">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/14.jpg" alt="Photography 14">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/15.jpg" alt="Photography 15">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/16.jpg" alt="Photography 16">
-      </div>
-      <div class="slide" data-category="photo">
-        <img src="photos/17.jpg" alt="Photography 17">
-      </div>
-      <div class="slide" data-category="graphic">
-        <img src="graphics/1.jpg" alt="Graphic Design 1">
-      </div>
-      <div class="slide" data-category="graphic">
-        <img src="graphics/2.jpg" alt="Graphic Design 2">
-      </div>
+      <!-- Слайды генерируются динамически через JS -->
     </div>
     <button class="nav-arrow arrow-left" aria-label="Previous"></button>
     <button class="nav-arrow arrow-right" aria-label="Next"></button>
@@ -277,12 +247,20 @@
   </div>
   
   <script>
-    const allSlides = Array.from(document.querySelectorAll('.slide'));
+    // Генерируем массивы с именами файлов
+    const photos = [];
+    const graphics = [];
+    
+    for(let i = 1; i <= 17; i++) {
+      const photoNum = i.toString().padStart(2, '0');
+      photos.push(`photos/${photoNum}.jpg`);
+      graphics.push(`graphics/${photoNum}.jpg`);
+    }
+
     const dotsContainer = document.getElementById('dots');
     const menuButtons = document.querySelectorAll('.menu-btn');
     let currentCategory = 'photo';
     let currentSlide = 0;
-    let visibleSlides = [];
     let isTransitioning = false;
     
     function getCategoryFromURL() {
@@ -299,54 +277,25 @@
       }
       history.pushState(null, '', newURL);
     }
-    
-    function filterSlides() {
-      const newVisibleSlides = allSlides.filter(slide => slide.getAttribute('data-category') === currentCategory);
-      
-      if (visibleSlides.length > 0 && !isTransitioning) {
-        const currentActiveSlide = visibleSlides[currentSlide];
-        if (currentActiveSlide) {
-          isTransitioning = true;
-          currentActiveSlide.classList.add('fade-out');
-          
-          setTimeout(() => {
-            allSlides.forEach(slide => {
-              slide.classList.remove('active', 'fade-out');
-              slide.style.display = 'none';
-            });
-            
-            newVisibleSlides.forEach((slide, idx) => {
-              slide.style.display = 'flex';
-              if (idx === 0) {
-                slide.classList.add('active');
-              }
-            });
-            
-            visibleSlides = newVisibleSlides;
-            currentSlide = 0;
-            updateDots();
-            updateMenuButtons();
-            isTransitioning = false;
-          }, 600);
-        }
-      } else {
-        allSlides.forEach(slide => {
-          slide.classList.remove('active', 'fade-out');
-          slide.style.display = 'none';
-        });
-        
-        newVisibleSlides.forEach((slide, idx) => {
-          slide.style.display = 'flex';
-          if (idx === 0) slide.classList.add('active');
-        });
-        
-        visibleSlides = newVisibleSlides;
-        currentSlide = 0;
-        updateDots();
-        updateMenuButtons();
-      }
+
+    function getCurrentImages() {
+      return currentCategory === 'photo' ? photos : graphics;
     }
-    
+
+    function generateSlides() {
+      const slidesContainer = document.getElementById('slides');
+      slidesContainer.innerHTML = '';
+      
+      const images = getCurrentImages();
+      images.forEach((src, index) => {
+        const slide = document.createElement('div');
+        slide.className = 'slide';
+        slide.setAttribute('data-category', currentCategory);
+        slide.innerHTML = `<img src="${src}" alt="${currentCategory} ${index + 1}">`;
+        slidesContainer.appendChild(slide);
+      });
+    }
+
     function updateMenuButtons() {
       menuButtons.forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-category') === currentCategory);
@@ -355,60 +304,113 @@
     
     function updateDots() {
       dotsContainer.innerHTML = '';
-      visibleSlides.forEach((_, index) => {
+      const images = getCurrentImages();
+      images.forEach((_, index) => {
         const dot = document.createElement('button');
         dot.className = 'dot';
         dot.setAttribute('aria-label', `${currentCategory} ${index + 1}`);
+        if (index === currentSlide) dot.classList.add('active');
         dot.addEventListener('click', () => goToSlide(index));
         dotsContainer.appendChild(dot);
       });
     }
-    
-    function updateSlide() {
-      if (visibleSlides.length === 0 || isTransitioning) return;
-      visibleSlides.forEach(slide => slide.classList.remove('active'));
-      if (visibleSlides[currentSlide]) visibleSlides[currentSlide].classList.add('active');
-      const dots = document.querySelectorAll('.dot');
-      dots.forEach((dot, index) => dot.classList.toggle('active', index === currentSlide));
+
+    function updateActiveSlide() {
+      const slides = document.querySelectorAll('.slide');
+      slides.forEach((slide, index) => {
+        slide.classList.remove('active');
+        if (index === currentSlide) {
+          slide.classList.add('active');
+        }
+      });
+    }
+
+    function switchCategory(newCategory) {
+      if (isTransitioning) return;
+      isTransitioning = true;
+
+      const currentSlides = document.querySelectorAll('.slide');
+      if (currentSlides.length > 0 && currentSlides[currentSlide]) {
+        currentSlides[currentSlide].classList.add('fade-out');
+      }
+
+      setTimeout(() => {
+        currentCategory = newCategory;
+        currentSlide = 0;
+        generateSlides();
+        updateActiveSlide();
+        updateDots();
+        updateMenuButtons();
+        updateURL(currentCategory);
+        isTransitioning = false;
+      }, 600);
     }
     
     function goToSlide(index) {
-      if (isTransitioning || index === currentSlide) return;
+      if (isTransitioning) return;
+      
+      const images = getCurrentImages();
+      
+      // Бесшовная навигация между категориями
+      if (index >= images.length) {
+        // Переходим к следующей категории
+        const newCategory = currentCategory === 'photo' ? 'graphic' : 'photo';
+        switchCategory(newCategory);
+        return;
+      }
+      
+      if (index < 0) {
+        // Переходим к предыдущей категории
+        const newCategory = currentCategory === 'photo' ? 'graphic' : 'photo';
+        const newImages = newCategory === 'photo' ? photos : graphics;
+        currentCategory = newCategory;
+        currentSlide = newImages.length - 1;
+        generateSlides();
+        updateActiveSlide();
+        updateDots();
+        updateMenuButtons();
+        updateURL(currentCategory);
+        return;
+      }
+
+      // Обычный переход внутри категории
+      if (index === currentSlide) return;
+      
       isTransitioning = true;
+      const slides = document.querySelectorAll('.slide');
       
-      const oldSlide = visibleSlides[currentSlide];
-      const newSlide = visibleSlides[index];
+      if (slides[currentSlide]) {
+        slides[currentSlide].classList.remove('active');
+      }
       
-      oldSlide.classList.remove('active');
-      newSlide.classList.add('active');
       currentSlide = index;
       
-      const dots = document.querySelectorAll('.dot');
-      dots.forEach((dot, i) => dot.classList.toggle('active', i === currentSlide));
+      if (slides[currentSlide]) {
+        slides[currentSlide].classList.add('active');
+      }
       
+      updateDots();
       setTimeout(() => { isTransitioning = false; }, 600);
     }
     
     function nextSlide() {
-      if (visibleSlides.length === 0 || isTransitioning) return;
-      let nextIdx = (currentSlide + 1) % visibleSlides.length;
+      const images = getCurrentImages();
+      let nextIdx = currentSlide + 1;
       goToSlide(nextIdx);
     }
     
     function prevSlide() {
-      if (visibleSlides.length === 0 || isTransitioning) return;
-      let prevIdx = (currentSlide - 1 + visibleSlides.length) % visibleSlides.length;
+      let prevIdx = currentSlide - 1;
       goToSlide(prevIdx);
     }
     
+    // Event listeners
     menuButtons.forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.preventDefault();
         const newCategory = btn.getAttribute('data-category');
-        if (newCategory !== currentCategory && !isTransitioning) {
-          currentCategory = newCategory;
-          updateURL(currentCategory);
-          filterSlides();
+        if (newCategory !== currentCategory) {
+          switchCategory(newCategory);
         }
       });
     });
@@ -416,8 +418,7 @@
     window.addEventListener('popstate', () => {
       const newCategory = getCategoryFromURL();
       if (newCategory !== currentCategory && !isTransitioning) {
-        currentCategory = newCategory;
-        filterSlides();
+        switchCategory(newCategory);
       }
     });
     
@@ -429,22 +430,37 @@
       if (e.key === 'ArrowRight') nextSlide();
     });
     
+    // Touch events для мобильных устройств
     let touchStartX = 0;
+    let touchStartY = 0;
+    
     document.addEventListener('touchstart', (e) => {
       touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
     }, { passive: true });
     
     document.addEventListener('touchend', (e) => {
       const touchEndX = e.changedTouches[0].screenX;
-      const diff = touchStartX - touchEndX;
-      if (Math.abs(diff) > 50) {
-        if (diff > 0) nextSlide();
-        else prevSlide();
+      const touchEndY = e.changedTouches[0].screenY;
+      const diffX = touchStartX - touchEndX;
+      const diffY = Math.abs(touchStartY - touchEndY);
+      
+      // Проверяем что это горизонтальный свайп
+      if (Math.abs(diffX) > 50 && diffY < 100) {
+        if (diffX > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
       }
     }, { passive: true });
     
+    // Инициализация
     currentCategory = getCategoryFromURL();
-    filterSlides();
+    generateSlides();
+    updateActiveSlide();
+    updateDots();
+    updateMenuButtons();
   </script>
 </body>
 </html>
