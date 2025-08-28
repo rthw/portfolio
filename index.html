@@ -5,9 +5,49 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Photography Portfolio">
   <title>Photography Portfolio</title>
-  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMTEyNDM3Ii8+CjwvZz4+" type="image/svg+xml">
+  <link rel="icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiBmaWxsPSIjMTEyNDM3Ci8+CjwvZz4+" type="image/svg+xml">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
   <style>
+    /* Preloader Styles */
+    #preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.8s ease-out, visibility 0.8s ease-out;
+    }
+    
+    #preloader.fade-out {
+      opacity: 0;
+      visibility: hidden;
+    }
+    
+    #preloader img {
+      max-width: 200px;
+      max-height: 200px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+    
+    /* Main content hidden during preload */
+    #main-content {
+      opacity: 0;
+      transition: opacity 0.5s ease-in 0.3s;
+    }
+    
+    #main-content.loaded {
+      opacity: 1;
+    }
+
     * {
       margin: 0;
       padding: 0;
@@ -168,6 +208,11 @@
 
     /* Улучшенная мобильная адаптация */
     @media (max-width: 768px) {
+      #preloader img {
+        max-width: 150px;
+        max-height: 150px;
+      }
+      
       .slides-container {
         padding-top: 50px;
         padding-bottom: 50px;
@@ -205,6 +250,11 @@
     }
 
     @media (max-height: 600px) {
+      #preloader img {
+        max-width: 120px;
+        max-height: 120px;
+      }
+      
       .slides-container {
         padding-top: 40px;
         padding-bottom: 40px;
@@ -230,24 +280,79 @@
   </style>
 </head>
 <body>
-  <div class="carousel">
-    <div class="top-menu">
-      <div class="author-name">Maxim Gospodinko</div>
-      <div class="menu-buttons">
-        <a href="index.html" class="menu-btn" data-category="photo">Photo</a>
-        <a href="index.html?category=graphic" class="menu-btn" data-category="graphic">Graphic</a>
+  <!-- Preloader -->
+  <div id="preloader">
+    <img src="preloader.webp" alt="Loading...">
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content">
+    <div class="carousel">
+      <div class="top-menu">
+        <div class="author-name">Maxim Gospodinko</div>
+        <div class="menu-buttons">
+          <a href="index.html" class="menu-btn" data-category="photo">Photo</a>
+          <a href="index.html?category=graphic" class="menu-btn" data-category="graphic">Graphic</a>
+        </div>
       </div>
+      <div class="slides-container" id="slides">
+        <!-- Слайды генерируются динамически через JS -->
+      </div>
+      <button class="nav-arrow arrow-left" aria-label="Previous"></button>
+      <button class="nav-arrow arrow-right" aria-label="Next"></button>
+      <div class="dots" id="dots"></div>
     </div>
-    <div class="slides-container" id="slides">
-      <!-- Слайды генерируются динамически через JS -->
-    </div>
-    <button class="nav-arrow arrow-left" aria-label="Previous"></button>
-    <button class="nav-arrow arrow-right" aria-label="Next"></button>
-    <div class="dots" id="dots"></div>
   </div>
   
   <script>
-    // Генерируем массивы с именами файлов
+    // Preloader Logic
+    let imagesLoaded = 0;
+    const totalImages = 34; // 17 photos + 17 graphics
+    
+    function hidePreloader() {
+      const preloader = document.getElementById('preloader');
+      const mainContent = document.getElementById('main-content');
+      
+      // Fade out preloader
+      preloader.classList.add('fade-out');
+      mainContent.classList.add('loaded');
+      
+      // Remove preloader from DOM after animation
+      setTimeout(() => {
+        if (preloader && preloader.parentNode) {
+          preloader.parentNode.removeChild(preloader);
+        }
+      }, 800);
+    }
+    
+    function imageLoaded() {
+      imagesLoaded++;
+      if (imagesLoaded >= totalImages) {
+        setTimeout(hidePreloader, 500); // Small delay for UX
+      }
+    }
+    
+    function preloadImages() {
+      const photos = [];
+      const graphics = [];
+      
+      for(let i = 1; i <= 17; i++) {
+        const num = i.toString().padStart(2, '0');
+        photos.push(`photos/${num}.jpg`);
+        graphics.push(`graphic/${num}.jpg`);
+      }
+      
+      const allImages = [...photos, ...graphics];
+      
+      allImages.forEach(src => {
+        const img = new Image();
+        img.onload = imageLoaded;
+        img.onerror = imageLoaded; // Count errors too
+        img.src = src;
+      });
+    }
+
+    // Main Portfolio Logic
     const photos = [];
     const graphics = [];
     
@@ -456,11 +561,24 @@
       }
     }, { passive: true });
     
-    // Инициализация
-    currentCategory = getCategoryFromURL();
-    generateSlides();
-    updateDots();
-    updateMenuButtons();
+    // Initialization
+    document.addEventListener('DOMContentLoaded', () => {
+      // Start preloading images
+      preloadImages();
+      
+      // Initialize portfolio
+      currentCategory = getCategoryFromURL();
+      generateSlides();
+      updateDots();
+      updateMenuButtons();
+      
+      // Fallback: hide preloader after 8 seconds max
+      setTimeout(() => {
+        if (document.getElementById('preloader')) {
+          hidePreloader();
+        }
+      }, 8000);
+    });
   </script>
 </body>
 </html>
