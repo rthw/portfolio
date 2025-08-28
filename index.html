@@ -301,12 +301,9 @@
   </style>
 </head>
 <body>
-  <!-- Preloader с fallback -->
+  <!-- Preloader -->
   <div id="preloader">
-    <picture>
-      <source srcset="preloader.webp" type="image/webp">
-      <img src="preloader.jpg" alt="Loading...">
-    </picture>
+    <img src="preloader.webp" alt="Loading...">
     <div id="preloader-text">PRESS SPACE TO VIEW</div>
   </div>
 
@@ -351,6 +348,7 @@
     function imageLoaded() {
       imagesLoaded++;
       if (imagesLoaded >= totalImages) {
+        // Убираем текст когда все загрузилось
         const preloaderText = document.getElementById('preloader-text');
         if (preloaderText) {
           preloaderText.textContent = 'PRESS SPACE TO VIEW';
@@ -364,8 +362,8 @@
       
       for(let i = 1; i <= 17; i++) {
         const num = i.toString().padStart(2, '0');
-        photos.push(`photos/${num}.jpg`);    // Используем JPG как fallback
-        graphics.push(`graphic/${num}.jpg`);  // Используем JPG как fallback
+        photos.push(`photos/${num}.webp`);
+        graphics.push(`graphic/${num}.webp`);
       }
       
       const allImages = [...photos, ...graphics];
@@ -386,27 +384,14 @@
       }
     });
 
-    // Функция создания изображения с fallback
-    function createImageWithFallback(photoNum, category) {
-      const webpSrc = `${category}/${photoNum}.webp`;
-      const jpgSrc = `${category}/${photoNum}.jpg`;
-      
-      return `
-        <picture>
-          <source srcset="${webpSrc}" type="image/webp">
-          <img src="${jpgSrc}" alt="${category === 'photos' ? 'Photography' : 'Graphic Design'}">
-        </picture>
-      `;
-    }
-
     // Portfolio Logic
     const photos = [];
     const graphics = [];
     
     for(let i = 1; i <= 17; i++) {
       const num = i.toString().padStart(2, '0');
-      photos.push(`photos/${num}.jpg`);    // Базовый fallback путь
-      graphics.push(`graphic/${num}.jpg`); // Базовый fallback путь
+      photos.push(`photos/${num}.webp`);
+      graphics.push(`graphic/${num}.webp`);
     }
 
     const dotsContainer = document.getElementById('dots');
@@ -443,20 +428,7 @@
         const slide = document.createElement('div');
         slide.className = 'slide';
         slide.setAttribute('data-category', currentCategory);
-        
-        // Создаем picture элемент с fallback
-        const num = (index + 1).toString().padStart(2, '0');
-        const folderName = currentCategory === 'photo' ? 'photos' : 'graphic';
-        const webpSrc = `${folderName}/${num}.webp`;
-        const jpgSrc = `${folderName}/${num}.jpg`;
-        
-        slide.innerHTML = `
-          <picture>
-            <source srcset="${webpSrc}" type="image/webp">
-            <img src="${jpgSrc}" alt="${currentCategory === 'photo' ? 'Photography' : 'Graphic Design'} ${index + 1}">
-          </picture>
-        `;
-        
+        slide.innerHTML = `<img src="${src}" alt="${currentCategory === 'photo' ? 'Photography' : 'Graphic Design'} ${index + 1}">`;
         slidesContainer.appendChild(slide);
       });
       
