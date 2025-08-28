@@ -17,6 +17,7 @@
       height: 100vh;
       background: #000;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       z-index: 10000;
@@ -31,11 +32,28 @@
     }
     
     #preloader img {
-      max-width: 200px;
-      max-height: 200px;
+      max-width: 100%;
+      max-height: 90%;
       width: auto;
       height: auto;
       object-fit: contain;
+      display: block;
+    }
+    
+    #preloader-text {
+      color: rgba(255, 255, 255, 0.6);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      margin-top: 20px;
+      text-align: center;
+      letter-spacing: 0.1em;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; }
+      50% { opacity: 1; }
     }
     
     /* Main content hidden during preload */
@@ -206,11 +224,15 @@
       background: white;
     }
 
-    /* Улучшенная мобильная адаптация */
+    /* Мобильная адаптация */
     @media (max-width: 768px) {
       #preloader img {
-        max-width: 150px;
-        max-height: 150px;
+        max-height: 85%;
+      }
+      
+      #preloader-text {
+        font-size: 12px;
+        margin-top: 15px;
       }
       
       .slides-container {
@@ -251,8 +273,7 @@
 
     @media (max-height: 600px) {
       #preloader img {
-        max-width: 120px;
-        max-height: 120px;
+        max-height: 80%;
       }
       
       .slides-container {
@@ -283,6 +304,7 @@
   <!-- Preloader -->
   <div id="preloader">
     <img src="preloader.webp" alt="Loading...">
+    <div id="preloader-text">PRESS SPACE TO VIEW</div>
   </div>
 
   <!-- Main Content -->
@@ -307,17 +329,15 @@
   <script>
     // Preloader Logic
     let imagesLoaded = 0;
-    const totalImages = 34; // 17 photos + 17 graphics
+    const totalImages = 34;
     
     function hidePreloader() {
       const preloader = document.getElementById('preloader');
       const mainContent = document.getElementById('main-content');
       
-      // Fade out preloader
       preloader.classList.add('fade-out');
       mainContent.classList.add('loaded');
       
-      // Remove preloader from DOM after animation
       setTimeout(() => {
         if (preloader && preloader.parentNode) {
           preloader.parentNode.removeChild(preloader);
@@ -328,7 +348,11 @@
     function imageLoaded() {
       imagesLoaded++;
       if (imagesLoaded >= totalImages) {
-        setTimeout(hidePreloader, 500); // Small delay for UX
+        // Убираем текст когда все загрузилось
+        const preloaderText = document.getElementById('preloader-text');
+        if (preloaderText) {
+          preloaderText.textContent = 'PRESS SPACE TO VIEW';
+        }
       }
     }
     
@@ -338,8 +362,8 @@
       
       for(let i = 1; i <= 17; i++) {
         const num = i.toString().padStart(2, '0');
-        photos.push(`photos/${num}.jpg`);
-        graphics.push(`graphic/${num}.jpg`);
+        photos.push(`photos/${num}.webp`);
+        graphics.push(`graphic/${num}.webp`);
       }
       
       const allImages = [...photos, ...graphics];
@@ -347,19 +371,27 @@
       allImages.forEach(src => {
         const img = new Image();
         img.onload = imageLoaded;
-        img.onerror = imageLoaded; // Count errors too
+        img.onerror = imageLoaded;
         img.src = src;
       });
     }
 
-    // Main Portfolio Logic
+    // Обработка нажатия пробела
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'Space' && document.getElementById('preloader')) {
+        e.preventDefault();
+        hidePreloader();
+      }
+    });
+
+    // Portfolio Logic
     const photos = [];
     const graphics = [];
     
     for(let i = 1; i <= 17; i++) {
       const num = i.toString().padStart(2, '0');
-      photos.push(`photos/${num}.jpg`);
-      graphics.push(`graphic/${num}.jpg`);
+      photos.push(`photos/${num}.webp`);
+      graphics.push(`graphic/${num}.webp`);
     }
 
     const dotsContainer = document.getElementById('dots');
@@ -400,7 +432,6 @@
         slidesContainer.appendChild(slide);
       });
       
-      // Показываем первый слайд
       const firstSlide = slidesContainer.children[0];
       if (firstSlide) {
         firstSlide.classList.add('active');
@@ -451,7 +482,6 @@
       
       const images = getCurrentImages();
       
-      // Бесшовная навигация между категориями
       if (index >= images.length) {
         const newCategory = currentCategory === 'photo' ? 'graphic' : 'photo';
         switchCategory(newCategory, 0);
@@ -465,7 +495,6 @@
         return;
       }
 
-      // Crossfade переход внутри категории
       if (index === currentSlide) return;
       
       isTransitioning = true;
@@ -474,19 +503,13 @@
       const newSlide = slides[index];
       
       if (oldSlide && newSlide) {
-        // Показываем новый слайд под старым
         newSlide.style.zIndex = '2';
         newSlide.classList.add('active');
-        
-        // Плавно скрываем старый слайд
         oldSlide.classList.add('fade-out');
         
         setTimeout(() => {
-          // Убираем классы у старого слайда
           oldSlide.classList.remove('active', 'fade-out');
           oldSlide.style.zIndex = '1';
-          
-          // Поднимаем новый слайд наверх
           newSlide.style.zIndex = '2';
           newSlide.classList.remove('fade-out');
           
@@ -536,7 +559,7 @@
       if (e.key === 'ArrowRight') nextSlide();
     });
     
-    // Touch events для мобильных устройств
+    // Touch events
     let touchStartX = 0;
     let touchStartY = 0;
     
@@ -551,7 +574,6 @@
       const diffX = touchStartX - touchEndX;
       const diffY = Math.abs(touchStartY - touchEndY);
       
-      // Проверяем что это горизонтальный свайп
       if (Math.abs(diffX) > 50 && diffY < 100) {
         if (diffX > 0) {
           nextSlide();
@@ -563,21 +585,19 @@
     
     // Initialization
     document.addEventListener('DOMContentLoaded', () => {
-      // Start preloading images
       preloadImages();
       
-      // Initialize portfolio
       currentCategory = getCategoryFromURL();
       generateSlides();
       updateDots();
       updateMenuButtons();
       
-      // Fallback: hide preloader after 8 seconds max
+      // Auto hide after 10 seconds
       setTimeout(() => {
         if (document.getElementById('preloader')) {
           hidePreloader();
         }
-      }, 8000);
+      }, 10000);
     });
   </script>
 </body>
