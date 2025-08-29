@@ -19,10 +19,42 @@
       font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     }
+    .preloader {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+      cursor: pointer;
+      transition: opacity 0.5s ease;
+    }
+    .preloader img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+    .preloader-text {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 16px;
+      margin-top: 20px;
+    }
     .carousel {
       position: relative;
       width: 100vw;
       height: 100vh;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.5s ease;
+    }
+    .carousel.loaded {
+      opacity: 1;
+      visibility: visible;
     }
     .slides-container {
       width: 100vw;
@@ -166,6 +198,7 @@
       background: white;
     }
 
+
     /* Улучшенная мобильная адаптация */
     @media (max-width: 768px) {
       .slides-container {
@@ -204,6 +237,7 @@
       }
     }
 
+
     @media (max-height: 600px) {
       .slides-container {
         padding-top: 40px;
@@ -230,7 +264,13 @@
   </style>
 </head>
 <body>
-  <div class="carousel">
+
+  <div class="preloader" id="preloader">
+    <img src="preloader.webp" alt="Loading...">
+    <div class="preloader-text">press something</div>
+  </div>
+
+  <div class="carousel" id="carousel">
     <div class="top-menu">
       <div class="author-name">Maxim Gospodinko</div>
       <div class="menu-buttons">
@@ -247,6 +287,29 @@
   </div>
   
   <script>
+    const preloader = document.getElementById('preloader');
+    const carousel = document.getElementById('carousel');
+
+    function hidePreloader() {
+      preloader.style.opacity = '0';
+      carousel.classList.add('loaded');
+      setTimeout(() => {
+        preloader.style.display = 'none';
+      }, 500); // Соответствует времени transition в CSS
+    }
+
+    function initApp() {
+      hidePreloader();
+      // Удаляем обработчики, чтобы они не сработали снова
+      window.removeEventListener('keydown', initApp);
+      window.removeEventListener('click', initApp);
+      window.removeEventListener('touchstart', initApp);
+    }
+    
+    window.addEventListener('keydown', initApp);
+    window.addEventListener('click', initApp);
+    window.addEventListener('touchstart', initApp);
+    
     // Генерируем массивы с именами файлов
     const photos = [];
     const graphics = [];
@@ -256,6 +319,7 @@
       photos.push(`photos/${num}.jpg`);
       graphics.push(`graphic/${num}.jpg`);
     }
+
 
     const dotsContainer = document.getElementById('dots');
     const menuButtons = document.querySelectorAll('.menu-btn');
@@ -278,9 +342,11 @@
       history.pushState(null, '', newURL);
     }
 
+
     function getCurrentImages() {
       return currentCategory === 'photo' ? photos : graphics;
     }
+
 
     function generateSlides() {
       const slidesContainer = document.getElementById('slides');
@@ -302,6 +368,7 @@
       }
     }
 
+
     function updateMenuButtons() {
       menuButtons.forEach(btn => {
         btn.classList.toggle('active', btn.getAttribute('data-category') === currentCategory);
@@ -321,14 +388,17 @@
       });
     }
 
+
     function switchCategory(newCategory, slideIndex = 0) {
       if (isTransitioning) return;
       isTransitioning = true;
+
 
       const currentSlides = document.querySelectorAll('.slide');
       if (currentSlides.length > 0 && currentSlides[currentSlide]) {
         currentSlides[currentSlide].classList.add('fade-out');
       }
+
 
       setTimeout(() => {
         currentCategory = newCategory;
@@ -359,6 +429,7 @@
         switchCategory(newCategory, newImages.length - 1);
         return;
       }
+
 
       // Crossfade переход внутри категории
       if (index === currentSlide) return;
@@ -463,4 +534,4 @@
     updateMenuButtons();
   </script>
 </body>
-</html>
+</html>```
